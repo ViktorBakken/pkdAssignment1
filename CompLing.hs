@@ -12,35 +12,90 @@ type Pairs = [(String, String)]
 type PairsTally = [((String, String), Int)]
 
 -- DO NOT CHANGE THE TYPE SIGNATURES FOR THESE FUNCTIONS
+
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
+
+wordCount :: Document -> WordTally
+wordCount doc = let lst = sort (concat doc)
+                in tallySentence 1 lst
+
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 tallySentence :: Int -> [String] -> WordTally
 tallySentence k [] = []
 tallySentence k (x:[]) = [(x, 1)]
+--VARIANT
 tallySentence k (x:y:xs) 
   | x == y = 
     if xs ==[] then [(x, (k + 1))] 
       else tallySentence (k + 1) (y:xs)
   | otherwise = [(x, k)] ++ tallySentence 1 (y:xs)
 
-wordCount :: Document -> WordTally
-wordCount doc = let lst = sort (concat doc)  -- remove "undefined" and write your function here
-            in tallySentence 1 lst
 
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 adjacentPairs :: Document -> Pairs
 adjacentPairs = undefined  -- remove "undefined" and write your function here
 
+
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 initialPairs :: Document -> Pairs
 initialPairs = undefined  -- remove "undefined" and write your function here
 
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 finalPairs :: Document -> Pairs
 finalPairs = undefined  -- remove "undefined" and write your function here
 
+
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 pairsCount :: Pairs -> PairsTally
 pairsCount = undefined  -- remove "undefined" and write your function here
 
 
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 neighbours :: PairsTally -> String -> WordTally
 neighbours = undefined  -- remove "undefined" and write your function here
 
+
+{- 
+
+   PRE: 
+   RETURNS: 
+   EXAMPLES:
+-}
 mostCommonNeighbour :: PairsTally -> String -> Maybe String
 mostCommonNeighbour = undefined  -- remove "undefined" and write your function here
 
