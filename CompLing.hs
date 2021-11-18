@@ -12,18 +12,18 @@ type Pairs = [(String, String)]
 type PairsTally = [((String, String), Int)]
 
 -- DO NOT CHANGE THE TYPE SIGNATURES FOR THESE FUNCTIONS
-sentenceSort :: [String] -> [String]
-sentenceSort = sort
-
-tallySentence ::(Eq a) => Int -> [a] -> [(a, Int )]
+tallySentence :: Int -> [String] -> WordTally
 tallySentence k [] = []
-tallySentence k (x:[]) = []
+tallySentence k (x:[]) = [(x, 1)]
 tallySentence k (x:y:xs) 
-  | x == y = tallySentence (k + 1) (y:xs)
+  | x == y = 
+    if xs ==[] then [(x, (k + 1))] 
+      else tallySentence (k + 1) (y:xs)
   | otherwise = [(x, k)] ++ tallySentence 1 (y:xs)
 
 wordCount :: Document -> WordTally
-wordCount = undefined  -- remove "undefined" and write your function here
+wordCount doc = let lst = sort (concat doc)  -- remove "undefined" and write your function here
+            in tallySentence 1 lst
 
 adjacentPairs :: Document -> Pairs
 adjacentPairs = undefined  -- remove "undefined" and write your function here
