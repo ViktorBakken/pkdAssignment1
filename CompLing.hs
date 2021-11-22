@@ -12,6 +12,7 @@ type Pairs = [(String, String)]
 type PairsTally = [((String, String), Int)]
 
 -- DO NOT CHANGE THE TYPE SIGNATURES FOR THESE FUNCTIONS
+-- Funktion 1
 
 {- wordCountAux k lst
 Creates a wordTally for a sentence.
@@ -42,15 +43,20 @@ wordCount doc = let lst = sort (concat doc)
 
 
 
+-- Funktion 2
 
-{- 
+sentenceToPairs :: Sentence -> Pairs
+sentenceToPairs [] = []
+sentenceToPairs [x] = []
+--VARIANT 
+sentenceToPairs (x:y:xs) = [(x, y)] ++ sentenceToPairs (y:xs)
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
--}
 adjacentPairs :: Document -> Pairs
-adjacentPairs = undefined  -- remove "undefined" and write your function here
+adjacentPairs doc 
+  | null (tail doc) = sentenceToPairs (head doc)
+--VARIANT 
+  | otherwise = sentenceToPairs (head doc) ++ adjacentPairs (tail doc)
+                  
 
 
 {- 
