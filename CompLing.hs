@@ -13,32 +13,34 @@ type PairsTally = [((String, String), Int)]
 
 -- DO NOT CHANGE THE TYPE SIGNATURES FOR THESE FUNCTIONS
 
-{- 
+{- wordCountAux k lst
+Creates a wordTally for a sentence.
+   PRE: k == 1, k :: Int, lst is sorted, lst :: String
+   RETURNS: WordTally for a sentence
+   EXAMPLES: wordCountAux 1 (sort ["a", "rose", "is", "a", "rose"]) == [("a",2),("is",1),("rose",2)]
+             wordCountAux 1 (sort ["but", "so", "is", "a", "rose"]) == [("a",1),("but",1),("is",1),("rose",1),("so",1)]
+-}
+wordCountAux :: Int -> [String] -> WordTally
+wordCountAux k [] = []
+wordCountAux k [x] = [(x, 1)]
+--VARIANT: lst length
+wordCountAux k (x:y:xs) 
+  | x == y = 
+    if xs == [] then [(x, k + 1)] 
+      else wordCountAux (k + 1) (y:xs)
+  | otherwise = (x, k) :wordCountAux 1 (y:xs)
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
+{- wordCount Document
+Creates a wordTally for a document.
+   RETURNS: WordTally for a document
+   EXAMPLES: wordCount [["a", "rose", "is", "a", "rose"],["but", "so", "is", "a", "rose"]] == [("a",3),("but",1),("is",2),("rose",3),("so",1)]
 -}
 
 wordCount :: Document -> WordTally
 wordCount doc = let lst = sort (concat doc)
-                in tallySentence 1 lst
+                in wordCountAux 1 lst
 
-{- 
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
--}
-tallySentence :: Int -> [String] -> WordTally
-tallySentence k [] = []
-tallySentence k (x:[]) = [(x, 1)]
---VARIANT
-tallySentence k (x:y:xs) 
-  | x == y = 
-    if xs ==[] then [(x, (k + 1))] 
-      else tallySentence (k + 1) (y:xs)
-  | otherwise = [(x, k)] ++ tallySentence 1 (y:xs)
 
 
 {- 
