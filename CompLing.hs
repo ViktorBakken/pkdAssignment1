@@ -119,14 +119,29 @@ pairsCount :: Pairs -> PairsTally
 pairsCount = undefined  -- remove "undefined" and write your function here
 
 
-{- 
+{- neighboursAux lst word
+Converts a pairsTally to a wordTally by removing a specific word
+   PRE: str1 :: String, str2 :: String, int1 :: Integer, removeWord :: String
+   RETURNS: A wordTally from a pairsTally
+   EXAMPLES: neighboursAux [(("bear","big"),2)] "big" == [("bear",2)]
+-}
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
+neighboursAux :: PairsTally -> String -> WordTally
+neighboursAux [((str1, str2), int1)] removeWord 
+            | removeWord == str1 = [(str2, int1)]
+            | removeWord == str2 = [(str1, int1)]
+            | otherwise = []
+
+{- neighbours lst word
+Shows many times a all the neighbour word comes after a specified word 
+   PRE: lst :: PairsTally, word :: String
+   RETURNS: A WordTally of all the neighbour words of a word and how many times the two words have been neighbours
+   EXAMPLES: neighbours [(("bear","big"),2),(("big","dog"),1)] "big" == [("bear",2),("dog",1)]
 -}
 neighbours :: PairsTally -> String -> WordTally
-neighbours = undefined  -- remove "undefined" and write your function here
+neighbours [] word = []
+--VARIANT: lst length
+neighbours (x:xs) word = neighboursAux [x] word ++ neighbours xs word
 
 
 {- 
