@@ -4,6 +4,7 @@ module CompLing(wordCount, adjacentPairs, pairsCount, neighbours, mostCommonNeig
 import Test.HUnit -- provides testing framework
 import PandP      -- provide sample text to play with (variable austin)
 import Data.List
+import AsmCodeGen (x86NcgImpl)
 -- DO NOT CHANGE THESE TYPES
 type Sentence = [String]
 type Document = [Sentence]
@@ -12,11 +13,11 @@ type Pairs = [(String, String)]
 type PairsTally = [((String, String), Int)]
 
 -- DO NOT CHANGE THE TYPE SIGNATURES FOR THESE FUNCTIONS
--- Funktion 1
+-- Function 1
 
 {- wordCountAux k lst
 Creates a wordTally for a sentence.
-   PRE: k == 1, k :: Int, lst is sorted, lst :: String
+   PRE: k == 1, k :: Int, lst is sorted, lst :: Sentence
    RETURNS: WordTally for a sentence
    EXAMPLES: wordCountAux 1 (sort ["a", "rose", "is", "a", "rose"]) == [("a",2),("is",1),("rose",2)]
              wordCountAux 1 (sort ["but", "so", "is", "a", "rose"]) == [("a",1),("but",1),("is",1),("rose",1),("so",1)]
@@ -33,6 +34,7 @@ wordCountAux k (x:y:xs)
 
 {- wordCount Document
 Creates a wordTally for a document.
+   Pre: doc :: Document
    RETURNS: WordTally for a document
    EXAMPLES: wordCount [["a", "rose", "is", "a", "rose"],["but", "so", "is", "a", "rose"]] == [("a",3),("but",1),("is",2),("rose",3),("so",1)]
 -}
@@ -43,7 +45,7 @@ wordCount doc = let lst = sort (concat doc)
 
 
 
--- Funktion 2
+-- Function 2
 
 sentenceToPairs :: Sentence -> Pairs
 sentenceToPairs [] = []
@@ -58,24 +60,53 @@ adjacentPairs doc
   | otherwise = sentenceToPairs (head doc) ++ adjacentPairs (tail doc)
                   
 
+-- Function 3
+{- initialPairsAux lst
+Returns the pair of words appearing at the start of a sentence
+   PRE: lst :: sentence
+   RETURNS: The pair of words at the start of a sentence 
+   EXAMPLES: initialPairsAux ["time", "for", "a", "break"] == [("time","for")]
 
-{- 
+-}
+initialPairsAux :: Sentence -> Pairs
+initialPairsAux [] = []
+initialPairsAux [x] = []
+initialPairsAux (x:y:xs) = [(x, y)]
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
+{- initialPairs lst
+Returns a list of all pairs of words appearing at the start of each sentence in a document
+   PRE: lst :: Document
+   RETURNS: A list of each pair of words that appear at the start of each sentence in a document
+   EXAMPLES: initialPairs [["time", "for", "a", "break"], ["not", "yet"]] == [("time","for"),("not", "yet")]
+
 -}
 initialPairs :: Document -> Pairs
-initialPairs = undefined  -- remove "undefined" and write your function here
+initialPairs [] = []
+--VARIANT: lst length
+initialPairs (x:xs) = initialPairsAux x ++ initialPairs xs
 
-{- 
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
+{- finalPairsAux
+Returns the pair of words appearing at the end of a sentence
+   PRE: lst :: Sentence
+   RETURNS: The pair of words at the end of a sentence 
+   EXAMPLES: finalPairsAux ["time", "for", "a", "break"] == [("a","break")]
+-}
+finalPairsAux :: Sentence -> Pairs
+finalPairsAux [] = []
+finalPairsAux [x] =  []
+finalPairsAux lst = let (x:y:xs) = reverse lst in [(y,x)]
+   
+{- finalPairs lst
+Returns a list of all pairs of words appearing at the end of sentence in a document
+   PRE: lst :: Document
+   RETURNS: A list of each pair of words that appear at the end of each sentence in a document
+   EXAMPLES: finalPairs [["time", "for", "a", "break"], ["not", "yet"]] == [("a","break"),("not", "yet")]
 -}
 finalPairs :: Document -> Pairs
-finalPairs = undefined  -- remove "undefined" and write your function here
+finalPairs [] = []
+--VARIANT: lst length
+finalPairs (x:xs) = finalPairsAux x ++ finalPairs xs
 
 
 {- 
