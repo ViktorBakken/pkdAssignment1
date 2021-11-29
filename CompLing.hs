@@ -17,7 +17,7 @@ type PairsTally = [((String, String), Int)]
 
 {- wordCountAux k lst
 Creates a wordTally for a sentence.
-   PRE: k == 1, k :: Int, lst is sorted, lst :: Sentence
+   PRE: k == 1, lst is sorted
    RETURNS: WordTally for a sentence
    EXAMPLES: wordCountAux 1 (sort ["a", "rose", "is", "a", "rose"]) == [("a",2),("is",1),("rose",2)]
              wordCountAux 1 (sort ["but", "so", "is", "a", "rose"]) == [("a",1),("but",1),("is",1),("rose",1),("so",1)]
@@ -34,7 +34,6 @@ wordCountAux k (x:y:xs)
 
 {- wordCount Document
 Creates a wordTally for a document.
-   Pre: doc :: Document
    RETURNS: WordTally for a document
    EXAMPLES: wordCount [["a", "rose", "is", "a", "rose"],["but", "so", "is", "a", "rose"]] == [("a",3),("but",1),("is",2),("rose",3),("so",1)]
 -}
@@ -63,7 +62,6 @@ adjacentPairs doc
 -- Function 3
 {- initialPairsAux lst
 Returns the pair of words appearing at the start of a sentence
-   PRE: lst :: sentence
    RETURNS: The pair of words at the start of a sentence 
    EXAMPLES: initialPairsAux ["time", "for", "a", "break"] == [("time","for")]
 
@@ -75,7 +73,6 @@ initialPairsAux (x:y:xs) = [(x, y)]
 
 {- initialPairs lst
 Returns a list of all pairs of words appearing at the start of each sentence in a document
-   PRE: lst :: Document
    RETURNS: A list of each pair of words that appear at the start of each sentence in a document
    EXAMPLES: initialPairs [["time", "for", "a", "break"], ["not", "yet"]] == [("time","for"),("not", "yet")]
 
@@ -88,7 +85,6 @@ initialPairs (x:xs) = initialPairsAux x ++ initialPairs xs
 
 {- finalPairsAux
 Returns the pair of words appearing at the end of a sentence
-   PRE: lst :: Sentence
    RETURNS: The pair of words at the end of a sentence 
    EXAMPLES: finalPairsAux ["time", "for", "a", "break"] == [("a","break")]
 -}
@@ -99,7 +95,6 @@ finalPairsAux lst = let (x:y:xs) = reverse lst in [(y,x)]
    
 {- finalPairs lst
 Returns a list of all pairs of words appearing at the end of sentence in a document
-   PRE: lst :: Document
    RETURNS: A list of each pair of words that appear at the end of each sentence in a document
    EXAMPLES: finalPairs [["time", "for", "a", "break"], ["not", "yet"]] == [("a","break"),("not", "yet")]
 -}
@@ -121,7 +116,6 @@ pairsCount = undefined  -- remove "undefined" and write your function here
 
 {- neighboursAux lst word
 Converts a pairsTally to a wordTally by removing a specific word
-   PRE: str1 :: String, str2 :: String, int1 :: Integer, removeWord :: String
    RETURNS: A wordTally from a pairsTally
    EXAMPLES: neighboursAux [(("bear","big"),2)] "big" == [("bear",2)]
 -}
@@ -134,7 +128,6 @@ neighboursAux [((str1, str2), int1)] removeWord
 
 {- neighbours lst word
 Shows many times a all the neighbour word comes after a specified word 
-   PRE: lst :: PairsTally, word :: String
    RETURNS: A WordTally of all the neighbour words of a word and how many times the two words have been neighbours
    EXAMPLES: neighbours [(("bear","big"),2),(("big","dog"),1)] "big" == [("bear",2),("dog",1)]
 -}
