@@ -32,20 +32,18 @@ wordCountAux k (x:y:xs)
       else wordCountAux (k + 1) (y:xs)
   | otherwise = (x, k) :wordCountAux 1 (y:xs)
 
+
 {- wordCount Document
 Creates a wordTally for a document.
    RETURNS: WordTally for a document
    EXAMPLES: wordCount [["a", "rose", "is", "a", "rose"],["but", "so", "is", "a", "rose"]] == [("a",3),("but",1),("is",2),("rose",3),("so",1)]
 -}
-
 wordCount :: Document -> WordTally
 wordCount doc = let lst = sort (concat doc)
                 in wordCountAux 1 lst
 
 
-
 -- Function 2
-
 sentenceToPairs :: Sentence -> Pairs
 sentenceToPairs [] = []
 sentenceToPairs [x] = []
@@ -64,18 +62,17 @@ adjacentPairs doc
 Returns the pair of words appearing at the start of a sentence
    RETURNS: The pair of words at the start of a sentence 
    EXAMPLES: initialPairsAux ["time", "for", "a", "break"] == [("time","for")]
-
 -}
 initialPairsAux :: Sentence -> Pairs
 initialPairsAux [] = []
 initialPairsAux [x] = []
 initialPairsAux (x:y:xs) = [(x, y)]
 
+
 {- initialPairs lst
 Returns a list of all pairs of words appearing at the start of each sentence in a document
    RETURNS: A list of each pair of words that appear at the start of each sentence in a document
    EXAMPLES: initialPairs [["time", "for", "a", "break"], ["not", "yet"]] == [("time","for"),("not", "yet")]
-
 -}
 initialPairs :: Document -> Pairs
 initialPairs [] = []
@@ -83,7 +80,7 @@ initialPairs [] = []
 initialPairs (x:xs) = initialPairsAux x ++ initialPairs xs
 
 
-{- finalPairsAux
+{- finalPairsAux lst
 Returns the pair of words appearing at the end of a sentence
    RETURNS: The pair of words at the end of a sentence 
    EXAMPLES: finalPairsAux ["time", "for", "a", "break"] == [("a","break")]
@@ -93,6 +90,7 @@ finalPairsAux [] = []
 finalPairsAux [x] =  []
 finalPairsAux lst = let (x:y:xs) = reverse lst in [(y,x)]
    
+
 {- finalPairs lst
 Returns a list of all pairs of words appearing at the end of sentence in a document
    RETURNS: A list of each pair of words that appear at the end of each sentence in a document
@@ -103,32 +101,46 @@ finalPairs [] = []
 --VARIANT: lst length
 finalPairs (x:xs) = finalPairsAux x ++ finalPairs xs
 
+--Function 4
+sortPairs :: Pairs -> Pairs
+sortPairs (x:xs) = sort (x:xs)
+sortPairs xs = []
 
-{- 
+invertPair :: (String, String) -> (String, String)
+invertPair (a, b) = (b, a)
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
--}
+tallyPairs :: Int -> Pairs -> PairsTally
+tallyPairs count [] = []
+tallyPairs count [x] = [(x, 1)]
+--VARIANT
+tallyPairs count (x:y:xs)
+  | x == y || invertPair x == y =
+    if null xs then [(x, count + 1)]
+      else tallyPairs (count + 1) (y:xs)
+  | otherwise = (x, count) : tallyPairs 1 (y:xs)
+
 pairsCount :: Pairs -> PairsTally
-pairsCount = undefined  -- remove "undefined" and write your function here
+pairsCount pairs =
+  let listOfPairs = sortPairs pairs
+    in tallyPairs 1 listOfPairs
 
 
+--Function 5
 {- neighboursAux lst word
-Converts a pairsTally to a wordTally by removing a specific word
+Converts a pairsTally to a wordTally by removing a specified word
    RETURNS: A wordTally from a pairsTally
    EXAMPLES: neighboursAux [(("bear","big"),2)] "big" == [("bear",2)]
 -}
-
 neighboursAux :: PairsTally -> String -> WordTally
 neighboursAux [((str1, str2), int1)] removeWord 
             | removeWord == str1 = [(str2, int1)]
             | removeWord == str2 = [(str1, int1)]
             | otherwise = []
 
+
 {- neighbours lst word
-Shows many times a all the neighbour word comes after a specified word 
-   RETURNS: A WordTally of all the neighbour words of a word and how many times the two words have been neighbours
+Shows what and how many times a word comes after a specified word
+   RETURNS: A WordTally of all the words that comes after a word, and how many times the two words have been neighbours
    EXAMPLES: neighbours [(("bear","big"),2),(("big","dog"),1)] "big" == [("bear",2),("dog",1)]
 -}
 neighbours :: PairsTally -> String -> WordTally
@@ -137,14 +149,34 @@ neighbours [] word = []
 neighbours (x:xs) word = neighboursAux [x] word ++ neighbours xs word
 
 
-{- 
+--Function 6
+{- mostCommonNeighbourAux lst int string
+     An auxilliary function for mostCommonNeighbour that examines a given list of neighbours to a given word to conclude which neighbour word is most common
+     PRE: The given integer should be 1 for the first comparison with another word to work
+     RETURNS: The most common neighbourword of any given word
+     EXAMPLES: mostCommonNeighbourAux [(("bear","big"),2),(("big","dog"),1)] 1 "big" == "bear"
+-}
+mostCommonNeighbourAux :: WordTally -> Int -> String -> String
+mostCommonNeighbourAux [] mostCommon word = word
+mostCommonNeighbourAux [(str1,int1)] mostCommon word = if int1 >= mostCommon
+  then str1
+  else word
+--VARIANT: lst length
+mostCommonNeighbourAux ((str1,int1):xs) mostCommon word = if int1 >= mostCommon
+  then mostCommonNeighbourAux xs int1 str1
+  else mostCommonNeighbourAux xs mostCommon word
 
-   PRE: 
-   RETURNS: 
-   EXAMPLES:
+
+{- mostCommonNeighbourAux lst string
+     A function that examines a given list of neighbours to a given word to conclude which neighbour word is most common
+     RETURNS: The most common neighbourword of any given word or Nothing if the given word doesnt appear in the list
+     EXAMPLES: mostCommonNeighbourAux [(("bear","big"),2),(("big","dog"),1)] 1 "big" == "bear"
 -}
 mostCommonNeighbour :: PairsTally -> String -> Maybe String
-mostCommonNeighbour = undefined  -- remove "undefined" and write your function here
+mostCommonNeighbour [] word = Nothing
+mostCommonNeighbour (x:xs) word
+  | mostCommonNeighbourAux (neighbours (x:xs) word) 1 word == word = Nothing
+  | otherwise = Just (mostCommonNeighbourAux (neighbours (x:xs) word) 1 word)
 
 
 
@@ -192,4 +224,4 @@ test10 = TestCase $ assertEqual "mostCommonNeighbour of \"bennet\""
             (Just "mr") (mostCommonNeighbour (pairsCount $ adjacentPairs $ austin) "bennet") 
 
 -- for running all the tests (type "runtests" within ghci --- without the quotes)
-runtests = runTestTT $ TestList [test1, test2, test3, test3a, test3b, {-test4, test5,-} test6, test7{-test8, test9, test10-}]
+runtests = runTestTT $ TestList [test1, test2, test3, test3a, test3b, test4, test5, test6, test7, test8, test9, test10]
