@@ -200,7 +200,3 @@ test10 = TestCase $ assertEqual "mostCommonNeighbour of \"bennet\""
 
 -- for running all the tests (type "runtests" within ghci --- without the quotes)
 runtests = runTestTT $ TestList [test1, test2, test3, test3a, test3b, test4, test5, test6, test7,test8,test9,test10]
-
-
-
-
