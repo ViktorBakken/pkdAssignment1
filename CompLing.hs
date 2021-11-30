@@ -4,7 +4,6 @@ module CompLing(wordCount, adjacentPairs, pairsCount, neighbours, mostCommonNeig
 import Test.HUnit -- provides testing framework
 import PandP      -- provide sample text to play with (variable austin)
 import Data.List
-import AsmCodeGen (x86NcgImpl)
 -- DO NOT CHANGE THESE TYPES
 type Sentence = [String]
 type Document = [Sentence]
@@ -28,7 +27,8 @@ wordCountAux k [x] = [(x, 1)]
 --VARIANT: lst length
 wordCountAux k (x:y:xs) 
   | x == y = 
-    if xs == [] then [(x, k + 1)] 
+    if xs == [] 
+      then [(x, k + 1)] 
       else wordCountAux (k + 1) (y:xs)
   | otherwise = (x, k) :wordCountAux 1 (y:xs)
 
@@ -39,8 +39,11 @@ Creates a wordTally for a document.
    EXAMPLES: wordCount [["a", "rose", "is", "a", "rose"],["but", "so", "is", "a", "rose"]] == [("a",3),("but",1),("is",2),("rose",3),("so",1)]
 -}
 wordCount :: Document -> WordTally
-wordCount doc = let lst = sort (concat doc)
-                in wordCountAux 1 lst
+wordCount doc = 
+  let 
+    lst = sort (concat doc)
+  in 
+    wordCountAux 1 lst
 
 
 -- Function 2
@@ -88,7 +91,11 @@ Returns the pair of words appearing at the end of a sentence
 finalPairsAux :: Sentence -> Pairs
 finalPairsAux [] = []
 finalPairsAux [x] =  []
-finalPairsAux lst = let (x:y:xs) = reverse lst in [(y,x)]
+finalPairsAux lst = 
+  let 
+    (x:y:xs) = reverse lst 
+  in 
+    [(y,x)]
    
 
 {- finalPairs lst
@@ -115,14 +122,17 @@ tallyPairs count [x] = [(x, 1)]
 --VARIANT
 tallyPairs count (x:y:xs)
   | x == y || invertPair x == y =
-    if null xs then [(x, count + 1)]
+    if null xs 
+      then [(x, count + 1)]
       else tallyPairs (count + 1) (y:xs)
   | otherwise = (x, count) : tallyPairs 1 (y:xs)
 
 pairsCount :: Pairs -> PairsTally
 pairsCount pairs =
-  let listOfPairs = sortPairs pairs
-    in tallyPairs 1 listOfPairs
+  let 
+    listOfPairs = sortPairs pairs
+  in 
+    tallyPairs 1 listOfPairs
 
 
 --Function 5
@@ -158,13 +168,15 @@ neighbours (x:xs) word = neighboursAux [x] word ++ neighbours xs word
 -}
 mostCommonNeighbourAux :: WordTally -> Int -> String -> String
 mostCommonNeighbourAux [] mostCommon word = word
-mostCommonNeighbourAux [(str1,int1)] mostCommon word = if int1 >= mostCommon
-  then str1
-  else word
+mostCommonNeighbourAux [(str1,int1)] mostCommon word = 
+  if int1 >= mostCommon
+    then str1
+    else word
 --VARIANT: lst length
-mostCommonNeighbourAux ((str1,int1):xs) mostCommon word = if int1 >= mostCommon
-  then mostCommonNeighbourAux xs int1 str1
-  else mostCommonNeighbourAux xs mostCommon word
+mostCommonNeighbourAux ((str1,int1):xs) mostCommon word = 
+  if int1 >= mostCommon
+    then mostCommonNeighbourAux xs int1 str1
+    else mostCommonNeighbourAux xs mostCommon word
 
 
 {- mostCommonNeighbourAux lst string
