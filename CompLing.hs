@@ -113,6 +113,7 @@ sortPairs :: Pairs -> Pairs
 sortPairs (x:xs) = sort (x:xs)
 sortPairs xs = []
 
+
 invertPair :: (String, String) -> (String, String)
 invertPair (a, b) = (b, a)
 
@@ -179,10 +180,11 @@ mostCommonNeighbourAux ((str1,int1):xs) mostCommon word =
     else mostCommonNeighbourAux xs mostCommon word
 
 
-{- mostCommonNeighbourAux lst string
+{- mostCommonNeighbour lst string
      A function that examines a given list of neighbours to a given word to conclude which neighbour word is most common
+     Pre: lst is the output of pairsCount
      RETURNS: The most common neighbourword of any given word or Nothing if the given word doesnt appear in the list
-     EXAMPLES: mostCommonNeighbourAux [(("bear","big"),2),(("big","dog"),1)] 1 "big" == "bear"
+     EXAMPLES: mostCommonNeighbour [(("bear","big"),2),(("big","dog"),1)] 1 "big" == "bear"
 -}
 mostCommonNeighbour :: PairsTally -> String -> Maybe String
 mostCommonNeighbour [] word = Nothing
